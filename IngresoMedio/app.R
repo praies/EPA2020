@@ -12,10 +12,6 @@ library(archivist.github)
 library(archivist)
 library(bit64)
 
-install.packages('rsconnect')
-
-devtools::install_github("pbiecek/archivist")
-
 # Cargar la data ARS
 IngresoMedioARS <- read_csv("Data/ingreso_medio_pesos.csv")
 IngresoMedioARS <- as.xts(IngresoMedioARS[,-1], as.Date(IngresoMedioARS$X1, "%d/%m/%Y"))
