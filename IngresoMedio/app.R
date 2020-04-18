@@ -71,7 +71,7 @@ ui <- dashboardPage(
       tabItem(tabName = "tab2",
       fluidRow(
         column(12,
-               includeMarkdown("Data/ReadMe.rmd")
+               includeMarkdown("Data/readme.rmd")
         )
       )
     ),
