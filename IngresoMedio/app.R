@@ -13,9 +13,6 @@ library(archivist)
 library(bit64)
 library(markdown)
 
-
-devtools::install_github("pbiecek/archivist")
-
 # Cargar la data ARS
 IngresoMedioARS <- read_csv("Data/ingreso_medio_pesos.csv")
 IngresoMedioARS <- as.xts(IngresoMedioARS[,-1], as.Date(IngresoMedioARS$X1, "%d/%m/%Y"))
@@ -41,13 +38,13 @@ ui <- dashboardPage(
     dashboardSidebar(sidebarMenu(
       menuItem("Ingresos Medios", tabName = "tab", icon = icon("chart-line")),
       # menuItem("Ingresos Medios - Escala Log", tabName = "tab1", icon = icon("chart-line")),
-      menuItem("Nota Metodológica", tabName = "tab2", icon = icon("table")),
+      menuItem("Nota MetodolÃ³gica", tabName = "tab2", icon = icon("table")),
       menuItem("Descargar Tabla", tabName = "tab4", icon = icon("download"))),
       
       selectInput("variable", "Categoria:",
                 c("Pesos Corrientes" = "IM",
-                  "Dólares Base 100 = Q3 2006" = "IMN",
-                  "Dólares Corrientes" = "IMUSD")),
+                  "DÃ³lares Base 100 = Q3 2006" = "IMN",
+                  "DÃ³lares Corrientes" = "IMUSD")),
       pickerInput(inputId = "Aglomerado",
                 label = "Selecciona el Aglomerado",
                 choices = c(colnames(IngresoMedioARS)),
