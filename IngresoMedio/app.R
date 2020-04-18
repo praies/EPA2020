@@ -11,6 +11,10 @@ library(devtools)
 library(archivist.github)
 library(archivist)
 library(bit64)
+library(markdown)
+
+
+devtools::install_github("pbiecek/archivist")
 
 # Cargar la data ARS
 IngresoMedioARS <- read_csv("Data/ingreso_medio_pesos.csv")
@@ -33,25 +37,28 @@ IngresoMedioNorm <- na.locf(IngresoMedioNorm, fromLast = T)
 ############################# API
 # Correr el UI
 ui <- dashboardPage(
-  dashboardHeader(title = "Ingreso Medio"),
-  dashboardSidebar(sidebarMenu(
-    selectInput("variable", "Categoria:",
-                c("Ingreso medio" = "IM",
-                  "Ingreso medio norm" = "IMN",
-                  "Ingreso medio USD" = "IMUSD")),
-        menuItem("Ingresos Medios", tabName = "tab", icon = icon("chart-line")),
-    # menuItem("Ingresos Medios - Escala Log", tabName = "tab1", icon = icon("chart-line")),
-    menuItem("Resumen", tabName = "tab2", icon = icon("table")),
-    menuItem("Descargar Tabla", tabName = "tab4", icon = icon("download"))),
-    pickerInput(inputId = "Aglomerado",
-                       label = "Selecciona el Aglomerado",
-                       choices = c(colnames(IngresoMedioARS)),
-                       selected = "BAHIA BLANCA - CERRI",options = list(`actions-box` = TRUE),multiple = T)),
+  dashboardHeader(title = "EPH - Ocupados"),
+    dashboardSidebar(sidebarMenu(
+      menuItem("Ingresos Medios", tabName = "tab", icon = icon("chart-line")),
+      # menuItem("Ingresos Medios - Escala Log", tabName = "tab1", icon = icon("chart-line")),
+      menuItem("Nota Metodológica", tabName = "tab2", icon = icon("table")),
+      menuItem("Descargar Tabla", tabName = "tab4", icon = icon("download"))),
+      
+      selectInput("variable", "Categoria:",
+                c("Pesos Corrientes" = "IM",
+                  "Dólares Base 100 = Q3 2006" = "IMN",
+                  "Dólares Corrientes" = "IMUSD")),
+      pickerInput(inputId = "Aglomerado",
+                label = "Selecciona el Aglomerado",
+                choices = c(colnames(IngresoMedioARS)),
+                selected = "BAHIA BLANCA - CERRI",options = list(`actions-box` = TRUE),multiple = T)),
+   
+    
   dashboardBody(
     tabItems(
       tabItem(tabName = "tab",
               fluidRow(
-                box(dygraphOutput("graph"), width=55),
+                box(dygraphOutput("graph"), width=60),
                 box(textOutput("legendDivID"),
                     title = "Legend", collapsible = TRUE, 
                     width=55)
@@ -67,14 +74,14 @@ ui <- dashboardPage(
       tabItem(tabName = "tab2",
       fluidRow(
         column(12,
-               dataTableOutput('table')
+               includeMarkdown("Data/ReadMe.rmd")
         )
       )
     ),
     tabItem(tabName = "tab4",
             fluidRow(
               column(12,
-    downloadLink('downloadData', 'Download')
+    downloadLink('downloadData', 'Presione Aqui')
     )
     )
    )
@@ -93,20 +100,20 @@ server <- function(input, output) {
   output$graph <- renderDygraph({
     if(input$variable == "IMUSD"){
       IngresoMedio <- IngresoMedioUSD[,c(input$Aglomerado)]
-    TITLE = "Ingresos Medios en Dolares"}
+    TITLE = "Ingresos Medios en USD"}
     else if(input$variable == "IMN"){
-      TITLE = "Ingresos Medios Normalizados"
+      TITLE = "Ingresos Medios en USD Normalizados, Base 100 = Q3 2006"
       IngresoMedio <- IngresoMedioNorm[,c(input$Aglomerado)]
       } else {
-      TITLE = "Ingresos Medios"
+      TITLE = "Ingresos Medios en Pesos Corrientes"
       IngresoMedio <- IngresoMedioARS[,c(input$Aglomerado)]
     } 
       
     withProgress(message = "Loading...", {
-      dygraph(IngresoMedio, main = TITLE, ylab = "Valor") %>% 
+      dygraph(IngresoMedio, main = TITLE) %>% 
         dyRangeSelector() %>%
         dyLegend(labelsDiv = "legendDivID")
-    })
+        })
   })
   # output$graph1 <- renderDygraph({
   #   

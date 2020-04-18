@@ -1,0 +1,21 @@
+---
+output: html_document
+---
+
+# Nota Metodologica
+
+**Fuentes:**
+
+- Ingresos: Encuesta Permanente de Hogares, https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos
+- Dolar 2003-2013: Tipo de Cambio de Referencia BCRA, https://www.bcra.gob.ar/PublicacionesEstadisticas/Tipos_de_cambios.asp
+- Dolar 2013-2019: Dolar Contado con Liquidacion Ambito Financiero, https://www.ambito.com/contenidos/dolar-cl-historico.html
+
+**Calculo Ingreso Medio segun variables EPH individual:**
+- Filtro: Variable "ESTADO"= "Ocupado"
+- Base Salarial: variable "PP080" multiplicado por variable "Pondera"
+- Base Laboral: suma variable "Pondera"
+- Ingreso Medio (por aglomerado) = Base Salarial/Base Laboral
+
+**Informacion de Contacto**
+- Pedro Raies, pedroraies@hotmail.com
+- Juan Serur, juanandresserur@gmail.com
